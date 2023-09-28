@@ -1,6 +1,5 @@
 import 'pessoa.dart';
 
-
 class CalculadoraIMC {
   Pessoa pessoa;
 
@@ -22,4 +21,3 @@ class CalculadoraIMC {
     return 'Obesidade Grau III (mórbida)';
   }
 }
-
