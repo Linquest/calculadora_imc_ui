@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'pessoa.dart';
 import 'calculadora_imc.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  await Hive.openBox<Pessoa>('people');
+  WidgetsFlutterBinding.ensureInitialized();
+  final documents = await getApplicationDocumentsDirectory();
+  Hive
+    ..init(documents.path)
+    ..registerAdapter(PessoaAdapter());
   runApp(const CalculadoraIMCApp());
 }
 
@@ -48,7 +52,8 @@ class _CalculadoraIMCAppState extends State<CalculadoraIMCApp> {
       double alturaEmCM = double.parse(alturaController.text);
       double alturaEmMetros = alturaEmCM / 100.0;
 
-      CalculadoraIMC calculadora = CalculadoraIMC(Pessoa(nome, peso, alturaEmMetros));
+      CalculadoraIMC calculadora =
+          CalculadoraIMC(Pessoa(nome, peso, alturaEmMetros));
       double imc = calculadora.calcular();
       imc = double.parse(imc.toStringAsFixed(1));
       String classificacao = calculadora.classificar();
@@ -59,7 +64,8 @@ class _CalculadoraIMCAppState extends State<CalculadoraIMCApp> {
       await box.add(person);
 
       setState(() {
-        resultado = '$nome, seu IMC é $imc e você está classificado como $classificacao';
+        resultado =
+            '$nome, seu IMC é $imc e você está classificado como $classificacao';
         listaDePessoas.insert(0, person);
         nomeController.clear();
         pesoController.clear();
@@ -133,8 +139,10 @@ class _CalculadoraIMCAppState extends State<CalculadoraIMCApp> {
                     itemCount: listaDePessoas.length,
                     itemBuilder: (context, index) {
                       Pessoa pessoa = listaDePessoas[index];
-                      double imc = pessoa.peso / (pessoa.altura * pessoa.altura);
-                      String classificacao = CalculadoraIMC(pessoa).classificar();
+                      double imc =
+                          pessoa.peso / (pessoa.altura * pessoa.altura);
+                      String classificacao =
+                          CalculadoraIMC(pessoa).classificar();
                       return Dismissible(
                         key: Key(pessoa.nome),
                         onDismissed: (direction) async {

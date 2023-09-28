@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
 
+part 'pessoa.g.dart';
+
 @HiveType(typeId: 0)
 class Pessoa extends HiveObject {
   @HiveField(0)
