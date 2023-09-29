@@ -8,11 +8,13 @@ import 'calculadora_imc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final documents = await getApplicationDocumentsDirectory();
-  Hive
-    ..init(documents.path)
-    ..registerAdapter(PessoaAdapter());
+
+  Hive.init(documents.path);
+  Hive.registerAdapter(PessoaAdapter());
+
   runApp(const CalculadoraIMCApp());
 }
+
 
 class CalculadoraIMCApp extends StatefulWidget {
   const CalculadoraIMCApp({Key? key}) : super(key: key);
